@@ -1,0 +1,30 @@
+inflasi=c(1641, 1663, 1698, 1721, 1770, 
+    1801, 1851, 1883, 1923, 1959, 
+    2000, 2048, 2091, 2134, 2198)
+inflasi
+
+inflasi.ts = ts(inflasi, start = c(1641, 2006), frequency = 12)
+print(inflasi.ts)
+
+holtb.inflasi = HoltWinters(inflasi.ts, alpha = NULL, beta = NULL, gamma = FALSE,
+                            l.start = inflasi.ts[1], #nilai awal untuk level
+                            b.start = inflasi.ts[2]-inflasi.ts[1]) #nilai awal untuk trend
+# alpha&beta NULL artinya parameter yg digunakan adalah "parameter optimum"
+holtb.inflasi
+
+# Holt dengan initial value default (nilai awal)
+holtb.inflasi = HoltWinters(inflasi.ts, alpha = 0.1, beta = 0.4, gamma = FALSE)
+holtb.inflasi
+
+# Ukuran kesalahan dari hasil peramalan
+holtb.inflasi$SSE 
+mse = holtb.inflasi$SSE/NROW(holtb.inflasi$fitted)
+rmse = sqrt(mse) 
+mape = mean(abs(inflasi.ts-holtb.inflasi$fitted[,1])/inflasi.ts, na.rm = TRUE)*100
+mse #sum square error
+rmse #mean square error
+mape
+
+# Holt dengan initial value default (nilai awal)
+holtb.inflasi = HoltWinters(inflasi.ts, alpha = 0.4, beta = 0.1, gamma = FALSE)
+holtb.inflasi
